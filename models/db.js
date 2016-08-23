@@ -1,5 +1,5 @@
 var settings = require('../mongoSettings'),
-    db = require('mongodb').Db,
+    Db = require('mongodb').Db,
     Connection = require('mongodb').Connection,
     Server = require('mongodb').Server;
 
