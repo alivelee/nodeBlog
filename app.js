@@ -15,13 +15,22 @@ var flash = require('connect-flash');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(flash());
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+//session and cookie
+app.use(session({
+  secret: settings.cookieSecret,
+  key: settings.db,
+  cookie: {maxAge:1000 * 60 * 60 * 24 * 30},
+  store: new MongoStore({
+    url:'mongodb://localhost/'+settings.db
+  })
+}));
+app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
@@ -58,13 +67,4 @@ app.use(function(err, req, res, next) {
   });
 });
 
-//session and cookie
-app.use(session({
-  secret: settings.cookieSecret,
-  key: settings.db,
-  cookie: {maxAge:1000 * 60 * 60 * 24 * 30},
-  store: new MongoStore({
-    url:'mongodb://localhost/'+settings.db
-  })
-}));
 module.exports = app;
