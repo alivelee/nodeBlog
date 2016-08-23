@@ -12,7 +12,7 @@ router.get('/reg', function (req, res) {
 router.post('/reg', function (req, res) {
   var name = req.body.name,
       password = req.body.password,
-      password_repeat = req.body['password-repeat'];
+      password_repeat = req.body['password-confirm'];
       if (password_repeat != password){
         req.flash('error','password is not the same');
         return res.redirect('/reg');
@@ -21,7 +21,7 @@ router.post('/reg', function (req, res) {
           password = md5.update(req.body.password).digest('hex');
           var newUser = new User({
             name: req.body.name,
-            password: req.body.password,
+            password: password,
             email: req.body.email
           });
       User.get(newUser.name, function(err,user){
@@ -30,7 +30,7 @@ router.post('/reg', function (req, res) {
           return res.redirect('/');
         }
         if (user) {
-          req.frash('error','User existed');
+          req.flash('error','User existed');
           return res.redirect('/reg');
         }
         newUser.save(function(err,user){

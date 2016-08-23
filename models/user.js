@@ -1,4 +1,4 @@
-var mongo = require('.db');
+var mongo = require('./db');
 function User(user) {
     this.name = user.name;
     this.password = user.password;
@@ -17,7 +17,7 @@ User.prototype.save = function(callback){
         if (err){
             return callback(err);
         }
-        db.connection('user',function(err,collection){
+        db.collection('user',function(err,collection){
             if (err) {
                 mongo.close();
                 return callback(err);
