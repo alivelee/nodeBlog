@@ -94,8 +94,8 @@ router.get('/post',function(req,res){
   res.render('post',{
     title:'Post',
     user:req.session.user,
-    succuess:req.flash('success').toString,
-    error:req.flash('error').toString
+    success:req.flash('success').toString(),
+    error:req.flash('error').toString()
   });
 });
 router.post('/post',checkLogin);
