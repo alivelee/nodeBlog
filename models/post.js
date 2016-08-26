@@ -43,7 +43,7 @@ Post.prototype.save = function(callback){
         });
     });
 };
-Post.get = function(name,callback){
+Post.getAll = function(name,callback){
     mongo.open(function(err,db){
         if (err){
           return callback(err);
@@ -69,6 +69,31 @@ Post.get = function(name,callback){
               });
               callback(null,docs);
           });
+        });
+    });
+}
+Post.getOne = function (name,day,title,callback){
+    mongo.open(function(err,db){
+        if (err) {
+            return callback(err);
+        }
+        db.collection('post',function(err,collection){
+            if (err) {
+                mongo.close();
+                return callback(err);
+            }
+            collection.findOne({
+                "name":name,
+                "title.day":day,
+                "title":title
+            },function(err,doc){
+                mongo.close();
+                if (err) {
+                    return callback(err);
+                }
+                doc.post = markdown.toHTML(doc.post);
+                callback(null,doc);
+            });
         });
     });
 }
