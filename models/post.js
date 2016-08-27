@@ -84,7 +84,7 @@ Post.getOne = function (name,day,title,callback){
             }
             collection.findOne({
                 "name":name,
-                "title.day":day,
+                "time.day":day,
                 "title":title
             },function(err,doc){
                 mongo.close();
