@@ -3,6 +3,7 @@ var router = express.Router();
 var crypto = require('crypto');
 var User = require('../models/user');
 var Post = require('../models/post');
+var passport = require('passport');
 /* GET home page. */
 router.get('/', function (req, res, next) {
   Post.getAll(null,function(err,posts){
@@ -154,6 +155,20 @@ router.get('/u/:name/:day/:title',function(req,res){
     });
   });
 });
+router.get('/login/github',passport.authenticate('github', { scope: [ 'user:email' ],session:false }),
+  function(req, res){
+    // The request will be redirected to GitHub for authentication, so this
+    // function will not be called.
+  }
+);
+router.get('/login/github/callback',passport.authenticate('github', { failureRedirect: '/login',session: false,successFlash:'login success' }),
+  function(req, res) {
+    req.session.user = {
+      name: req.user.username
+    }
+    res.redirect('/');
+  }
+);
 function checkLogin(req,res,next){
   if (!req.session.user){
     req.flash('error','Not Login');

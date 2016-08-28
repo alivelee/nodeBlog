@@ -17,6 +17,8 @@
     "markdown": "^0.5.0",
     "mongodb": "^2.2.7",
     "morgan": "~1.7.0",
+    "passport": "^0.3.2",
+    "passport-github2": "^0.1.10",
     "serve-favicon": "~2.3.0"
   }
 }
