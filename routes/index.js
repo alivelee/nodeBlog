@@ -3,6 +3,7 @@ var router = express.Router();
 var crypto = require('crypto');
 var User = require('../models/user');
 var Post = require('../models/post');
+var Comment = require('../models/comment');
 var passport = require('passport');
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -153,6 +154,26 @@ router.get('/u/:name/:day/:title',function(req,res){
       success:req.flash('success').toString(),
       error:req.flash('error').toString()
     });
+  });
+});
+router.post('/u/:name/:day/:title',function(req,res){
+  var date = new Date();
+  var time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ?'0' + date.getMinutes():date.getMinutes());
+  var comment = {
+    name: req.body.name,
+    email: req.body.email,
+    website: req.body.website,
+    time: time,
+    content: req.body.content
+  };
+  var newComment = new Comment(req.params.name,req.params.day,req.params.title,comment);
+  newComment.save(function(err){
+    if (err) {
+      req.flash('error',err);
+      return res.redirect('back');
+    }
+    req.flash('success','comment success');
+    res.redirect('back');
   });
 });
 router.get('/login/github',passport.authenticate('github', { scope: [ 'user:email' ],session:false }),
