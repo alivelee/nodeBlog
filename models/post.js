@@ -101,3 +101,27 @@ Post.getOne = function (name,day,title,callback){
         });
     });
 }
+Post.edit = function(name,day,title,callback){
+    mongo.open(function(err,db){
+        if (err) {
+            return callback(err);
+        }
+        db.collection('post',function(err,collection){
+            if (err) {
+                mongo.close();
+                return callback(err);
+            }
+            collection.findOne({
+                "name":name,
+                "time.day":day,
+                "title":title
+            },function(err,doc){
+                mongo.close();
+                if (err) {
+                    return callback(err);
+                }
+                callback(null,doc);
+            });
+        });
+    });
+};
