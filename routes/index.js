@@ -157,22 +157,22 @@ router.get('/u/:name/:day/:title',function(req,res){
   });
 });
 router.get('/edit/:name/:day/:title',checkLogin);
-router.get('/edit/:name/:day/:title',function(req,res){
-  var currentUser = req.session.user;
-  Post.edit(currentUser.name,req.params.day,req.params.title,function(err,post){
-    if (err ) {
-      req.flash('error',err);
-      return res.redirect('back');
-    }
-    res.render('edit',{
-      title:"Edit",
-      post:post,
-      user:req.session.user,
-      success:req.flash('success').toString(),
-      error:req.flash('error').toString()
+router.get('/edit/:name/:day/:title', function (req, res) {
+    var currentUser = req.session.user;
+    Post.edit(currentUser.name, req.params.day, req.params.title, function (err, post) {
+      if (err) {
+        req.flash('error', err); 
+        return res.redirect('back');
+      }
+      res.render('edit', {
+        title: 'Edit',
+        post: post,
+        user: req.session.user,
+        success: req.flash('success').toString(),
+        error: req.flash('error').toString()
+      });
     });
   });
-});
 router.post('/u/:name/:day/:title',function(req,res){
   var date = new Date();
   var time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ?'0' + date.getMinutes():date.getMinutes());
