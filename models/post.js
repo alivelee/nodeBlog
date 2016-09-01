@@ -126,13 +126,13 @@ Post.edit = function(name,day,title,callback){
     });
 };
 Post.update = function(name, day, title, post, callback) {
-  mongodb.open(function (err, db) {
+  mongo.open(function (err, db) {
     if (err) {
       return callback(err);
     }
-    db.collection('posts', function (err, collection) {
+    db.collection('post', function (err, collection) {
       if (err) {
-        mongodb.close();
+        mongo.close();
         return callback(err);
       }
       collection.update({
@@ -142,7 +142,7 @@ Post.update = function(name, day, title, post, callback) {
       }, {
         $set: {post: post}
       }, function (err) {
-        mongodb.close();
+        mongo.close();
         if (err) {
           return callback(err);
         }
@@ -151,3 +151,30 @@ Post.update = function(name, day, title, post, callback) {
     });
   });
 };
+Post.remove = function (name,day,title,callback){
+    mongo.open(function(err,db){
+        if (err) {
+            mongo.close();
+            callback(err);
+        }
+        db.collection('post',function(err,collection){
+          if (err) {
+              mongo.close();
+              callback(err);
+          }
+          collection.remove({
+              "name":name,
+              "time.day":day,
+              "title":title
+          },{
+              w:1
+          },function (err){
+              mongo.close();
+              if (err) {
+                  return callback(err);
+              }
+              callback(null);
+          });
+        });
+    });
+}
