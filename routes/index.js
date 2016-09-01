@@ -173,6 +173,31 @@ router.get('/edit/:name/:day/:title', function (req, res) {
       });
     });
   });
+router.post('/edit/:name/:day/:title', checkLogin);
+router.post('/edit/:name/:day/:title', function (req, res) {
+    var currentUser = req.session.user;
+    Post.update(currentUser.name, req.params.day, req.params.title, req.body.post, function (err) {
+      var url = encodeURI('/u/' + req.params.name + '/' + req.params.day + '/' + req.params.title);
+      if (err) {
+        req.flash('error', err); 
+        return res.redirect(url);
+      }
+      req.flash('success', 'edit success');
+      res.redirect(url);
+    });
+  });
+router.get('/remove/:name/:day/:title', checkLogin);
+router.get('/remove/:name/:day/:title', function (req, res) {
+   var currentUser = req.session.user;
+   Post.remove(currentUser.name,req.params.day,req.params.title,function(err){
+     if (err) {
+       req.flash('error',err);
+       res.redirect('back');  
+     }
+     req.flash('success','delete success');
+     res.redirect('/');
+   });
+  });
 router.post('/u/:name/:day/:title',function(req,res){
   var date = new Date();
   var time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ?'0' + date.getMinutes():date.getMinutes());
