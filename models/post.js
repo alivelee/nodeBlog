@@ -206,3 +206,23 @@ Post.getArchieve = function(callback){
         });
     });
 }
+Post.getTags = function(callback){
+    mongo.open(function(err,db){
+        if (err) {
+            return callback(err);
+        }
+        db.collection('post',function(err,collection){
+            if (err) {
+                mongo.close();
+                return callback(err);
+            }
+            collection.distinct("tags",function(err,docs){
+                mongo.close();
+                if (err) {
+                    return callback(err);
+                }
+                callback(null,docs);
+            });
+        });
+    });
+}
