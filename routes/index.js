@@ -229,6 +229,21 @@ router.get('/tags',function(req,res){
     });
   });
 });
+router.get('/tags/:tag',function(req,res){
+  Post.getTag(req.params.tag,function(err,posts){
+    if (err) {
+      req.flash('error',err);
+      return res.redirect('/');
+    }
+    res.render('tag',{
+      title:'Tag:'+req.params.tag,
+      posts:posts,
+      user:req.session.user,
+      success:req.flash('success').toString(),
+      error:req.flash('error').toString()
+    });
+  });
+});
 router.post('/u/:name/:day/:title',function(req,res){
   var date = new Date();
   var time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + (date.getMinutes() < 10 ?'0' + date.getMinutes():date.getMinutes());
