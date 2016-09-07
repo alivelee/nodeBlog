@@ -23,7 +23,8 @@ Post.prototype.save = function(callback){
         title:this.title,
         post:this.post,
         tags:this.tags,
-        comments:[]
+        comments:[],
+        pageView:0
     }
     mongo.open(function(err,db){
         if (err){
@@ -92,7 +93,24 @@ Post.getOne = function (name,day,title,callback){
             },function(err,doc){
                 mongo.close();
                 if (err) {
+                    mongo.close();
                     return callback(err);
+                }
+                if (doc) {
+                    collection.update({
+                        "name":name,
+                        "time.day":day,
+                        "title":title
+                    },{
+                        $inc:{
+                            "pageView":1
+                        }
+                    },function(){
+                        mongo.close();
+                        if (err) {
+                           console.log(err);
+                        }
+                    });
                 }
                 doc.post = markdown.toHTML(doc.post);
                 // doc.comments.forEach(function(comment){
