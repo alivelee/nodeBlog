@@ -121,6 +121,21 @@ router.post('/post',function(req,res){
     res.redirect('/');
   });
 });
+router.get('/search',function(req,res){
+  Post.search(req.query.searchBar,function(err,posts){
+    if (err) {
+      req.flash('error',err);
+      return res.redirect('/');
+    }
+    res.render('search',{
+      title:"SEARCH:" + req.query.searchBar,
+      posts:posts,
+      user:req.session.user,
+      success:req.flash('success').toString(),
+      error:req.flash('error').toString()
+    });
+  });
+});
 router.get('/u/:name',function(req,res){
   User.get(req.params.name, function(err,user){
     if (!user) {
@@ -278,7 +293,7 @@ router.get('/login/github/callback',passport.authenticate('github', { failureRed
     res.redirect('/');
   }
 );
-app.use(function(res,req){
+router.use(function(res,req){
   res.render('404');
 });
 function checkLogin(req,res,next){
