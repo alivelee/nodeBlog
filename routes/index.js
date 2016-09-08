@@ -278,6 +278,9 @@ router.get('/login/github/callback',passport.authenticate('github', { failureRed
     res.redirect('/');
   }
 );
+app.use(function(res,req){
+  res.render('404');
+});
 function checkLogin(req,res,next){
   if (!req.session.user){
     req.flash('error','Not Login');
